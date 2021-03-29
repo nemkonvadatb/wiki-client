@@ -110,7 +110,7 @@ export class AuthComponent implements OnInit, OnDestroy {
           /* localStorage.setItem('id', res.id);
             localStorage.setItem('name', res.name); */
           localStorage.setItem('token', res.token);
-          this.router.navigate(['/home']);
+          this.router.navigate(['/profile']);
         },
         (error) => {
           this.snackBar.open(error.message, null, { duration: 2000 });
