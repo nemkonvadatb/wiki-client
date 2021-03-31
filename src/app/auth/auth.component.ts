@@ -107,9 +107,11 @@ export class AuthComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         (res: any) => {
-          /* localStorage.setItem('id', res.id);
-            localStorage.setItem('name', res.name); */
+          /*  localStorage.setItem('name', res.name); */
+          localStorage.setItem('user-id', res.id);
           localStorage.setItem('token', res.token);
+          console.log("res: ", res);
+          
           this.router.navigate(['/profile']);
         },
         (error) => {
