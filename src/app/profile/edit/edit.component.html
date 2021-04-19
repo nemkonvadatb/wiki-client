@@ -1,0 +1,55 @@
+<mat-card class="profile" *ngIf="user">
+    <mat-card-header>
+        <div mat-card-avatar class="profile-header-image"></div>
+        <mat-card-title>{{ user.name }}</mat-card-title>
+        <mat-card-subtitle>Edit profile</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="user-form">
+
+        <form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="submit()">
+            <mat-form-field class="full-width">
+                <mat-label>Userame</mat-label>
+                <input matInput formControlName="username">
+                <mat-error *ngIf="userForm.controls.username.hasError('required')">
+                    Username cannot be empty!
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Academic degree" formControlName="academicDegree">
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Specialisation" formControlName="specialization">
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Institucion" formControlName="institution">
+            </mat-form-field>
+            <mat-form-field class="full-width" *ngIf="isAdmin">
+                <input matInput placeholder="Role" formControlName="role">
+                <mat-error *ngIf="userForm.controls.role.hasError('required')">
+                    Must select a role!
+                </mat-error>
+            </mat-form-field>
+            <label>Languages</label>
+            <mat-list>
+                <mat-list-item *ngFor="let l of languages">
+                    <button mat-icon-button matSuffix (click)="removeLang(l)">
+                        <mat-icon>remove_circle</mat-icon>
+                    </button> {{ l }}
+                </mat-list-item>
+                <mat-list-item>
+                    <mat-form-field>
+                        <mat-select (selectionChange)="addLang($event.value)">
+                            <mat-option *ngFor="let opt of langList" [value]="opt">{{ opt }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-list-item>
+            </mat-list>
+        </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+        <button mat-button (click)="save(false)">CANCEL</button>
+        <button mat-button (click)="submit()" [disabled]="(!userForm.valid||userForm.pristine)&&!langChange">SAVE</button>
+    </mat-card-actions>
+</mat-card>

@@ -1,16 +1,23 @@
-<mat-card class="profile">
-    <mat-card-header>
-        <div mat-card-avatar class="profile-header-image"></div>
-        <mat-card-title>{{ username }}</mat-card-title>
-        <mat-card-subtitle>Profile info</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content *ngIf="userInfo">
-        <mat-list *ngFor="let u of userInfo">
-            <mat-list-item *ngFor="let item of generateArray(u)"> {{ item.key }} : {{ item.value }} </mat-list-item>
-        </mat-list>
-        <!-- ez most mindent is kiír ami a user objektumban van -->
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-button>EDIT</button>
-    </mat-card-actions>
-</mat-card>
+<ng-container *ngIf="!edit else editting">
+    <mat-card class="profile">
+        <mat-card-header>
+            <div mat-card-avatar style="background-image: url({{img}})" class="profile-header-image"></div>
+            <mat-card-title>{{ username }}</mat-card-title>
+            <mat-card-subtitle>Profile info</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content *ngIf="user">
+            <mat-list>
+                <mat-list-item *ngFor="let l of userDataLabels"> {{ l.label }} : {{ user[l.dbId] }}
+                </mat-list-item>
+            </mat-list>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-button (click)="editData()">EDIT</button>
+        </mat-card-actions>
+    </mat-card>
+</ng-container>
+<ng-template #editting>
+    <app-edit [user]="user" (saveEvent)="saveChanges($event)"></app-edit>
+</ng-template>
