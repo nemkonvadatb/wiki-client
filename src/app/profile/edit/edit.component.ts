@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { LANG_LIST } from 'src/assets/language.list';
-import { User, USER_DATA } from '../user.model';
+import { User, USER_DATA } from '../../shared/user.model';
 
 @Component({
   selector: 'app-edit',
@@ -25,17 +25,17 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
     this.initUserForm();
-    this.languages = this.user.userLang || [];
+    this.languages = this.user.lang || [];
     this.languages_ = [...this.languages] || [];
   }
 
   initUserForm(): void {
     this.userForm = new FormGroup({
       username: new FormControl(this.user.name, [Validators.required]),
-      academicDegree: new FormControl(this.user.academicDegree),
+      academic_degree: new FormControl(this.user.academic_degree),
       specialization: new FormControl(this.user.specialization),
       institution: new FormControl(this.user.institution),
-      userLang: new FormControl(this.user.userLang),
+      lang: new FormControl(this.user.lang),
       role: new FormControl(this.user.role, [Validators.required]),
     });
     if (!this.isAdmin) {
@@ -45,19 +45,35 @@ export class EditComponent implements OnInit {
 
   submit(): void {
     this.user.name = this.userForm.get('username').value;
-    this.user.academicDegree = this.userForm.get('academicDegree').value;
+    this.user.academic_degree = this.userForm.get('academic_degree').value;
     this.user.specialization = this.userForm.get('specialization').value;
     this.user.institution = this.userForm.get('institution').value;
-    this.user.userLang = this.userForm.get('userLang').value;
+    this.user.lang = this.userForm.get('lang').value;
     if (this.isAdmin) {
       this.user.role = this.userForm.get('role').value;
     }
-    this.user.userLang = this.languages;
+    this.user.lang = this.languages;
     console.log(this.user);
 
+    this.userService.edit(this.user).subscribe(
+      (res: any) => {
+        /* this.snackBar.open('Successful registration!', null, {
+          duration: 2000,
+        });
+        setTimeout(() => {
+          this.setIsLoginActive();
+        }, 1500); */
+        console.log("userservice.edit: ", res);
+      },
+      (error) => {
+        // this.snackBar.open(error.message, null, { duration: 2000 });
+        console.log(error);
+      }
+      );
+      
     // TODO: 
-    // this.userService.save? 
     // this.save(true);
+
   }
 
   save(save: boolean) {

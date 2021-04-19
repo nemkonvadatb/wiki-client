@@ -11,8 +11,8 @@ export interface User {
     role?: string;
     specialization?: string;
     institution?: string;
-    academicDegree?: any;
-    userLang?: string[];
+    academic_degree?: any;
+    lang?: string[];
     articleParticipant?: string[];
     numberOfArticles?: number;
     registeredAt?: any;
@@ -29,7 +29,7 @@ export const USER_DATA: UserData[] = [
     },
     {
       label: "Academic degree",
-      dbId: ""
+      dbId: "academic_degree"
     },
     {
       label: "Specialisation",
@@ -49,7 +49,7 @@ export const USER_DATA: UserData[] = [
     },
     {
       label: "Languages",
-      dbId: ""
+      dbId: "lang"
     },
     {
       label: "Number of articles",

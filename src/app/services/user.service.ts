@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { User } from '../shared/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,10 @@ export class UserService {
 
   login(user): Observable<unknown> {
     return this.http.post('users/login', user);
+  }
+
+  edit(user: User): Observable<unknown> {
+    return this.http.put('users/update', user);
   }
 
   logout(): void {

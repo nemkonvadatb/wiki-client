@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService } from '../services/user.service';
-import { USER_DATA, User } from './user.model';
+import { USER_DATA, User } from '../shared/user.model';
 
 
 @Component({
@@ -35,8 +35,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
           role: userInfo.role,
           specialization: userInfo.specialization,
           institution: userInfo.institution,
-          academicDegree: userInfo.academicDegree,
-          userLang: userInfo.userLang,
+          academic_degree: userInfo.academic_degree,
+          lang: userInfo.lang,
           articleParticipant: userInfo.articleParticipant,
           numberOfArticles: userInfo.articleParticipant?.length(),
           registeredAt: null //TODO:
