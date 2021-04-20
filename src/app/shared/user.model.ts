@@ -33,15 +33,15 @@ export const USER_DATA: UserData[] = [
     },
     {
       label: "Specialisation",
-      dbId: ""
+      dbId: "specialization"
     },
     {
       label: "Institucion",
-      dbId: ""
+      dbId: "institution"
     },
     {
       label: "Role",
-      dbId: ""
+      dbId: "role"
     },
     {
       label: "Registered at",
@@ -56,4 +56,10 @@ export const USER_DATA: UserData[] = [
       dbId: ""
     },
   ];
+
+  export const ROLES = [
+    "user", 
+    "admin",
+    "lector"
+  ]
 

@@ -25,7 +25,10 @@
                 <input matInput placeholder="Institucion" formControlName="institution">
             </mat-form-field>
             <mat-form-field class="full-width" *ngIf="isAdmin">
-                <input matInput placeholder="Role" formControlName="role">
+                <mat-label>Role</mat-label>
+                <mat-select formControlName="role">
+                    <mat-option *ngFor="let opt of roleList" [value]="opt">{{ opt }}</mat-option>
+                </mat-select>
                 <mat-error *ngIf="userForm.controls.role.hasError('required')">
                     Must select a role!
                 </mat-error>

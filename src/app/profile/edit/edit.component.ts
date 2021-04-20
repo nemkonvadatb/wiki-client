@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/app/services/user.service';
-import { LANG_LIST } from 'src/assets/language.list';
-import { User, USER_DATA } from '../../shared/user.model';
+import { LANG_LIST } from 'src/app/shared/language.list';
+import { ROLES, User, USER_DATA } from '../../shared/user.model';
 
 @Component({
   selector: 'app-edit',
@@ -14,19 +15,20 @@ export class EditComponent implements OnInit {
   @Output() saveEvent = new EventEmitter<boolean>();
   userDataLabels = USER_DATA;
   userForm: FormGroup;
-  languages: string[];
+  languages: Set<string>;
   languages_: string[];
   langChange: boolean = false;
   langList = LANG_LIST;
+  roleList = ROLES;
   isAdmin: boolean = false; // TODO: check if user can edit the role of a user
 
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.initUserForm();
-    this.languages = this.user.lang || [];
-    this.languages_ = [...this.languages] || [];
+    this.languages = new Set(this.user.lang);
+    this.languages_ = [...this.user.lang] || [];
   }
 
   initUserForm(): void {
@@ -52,28 +54,23 @@ export class EditComponent implements OnInit {
     if (this.isAdmin) {
       this.user.role = this.userForm.get('role').value;
     }
-    this.user.lang = this.languages;
+    this.user.lang = Array.from(this.languages);
     console.log(this.user);
 
     this.userService.edit(this.user).subscribe(
       (res: any) => {
-        /* this.snackBar.open('Successful registration!', null, {
+        this.snackBar.open('Changes succesfully saved!', null, {
           duration: 2000,
         });
-        setTimeout(() => {
-          this.setIsLoginActive();
-        }, 1500); */
-        console.log("userservice.edit: ", res);
+        this.save(true);
+        console.log(res);
       },
       (error) => {
-        // this.snackBar.open(error.message, null, { duration: 2000 });
+        this.snackBar.open(error.message, null, { duration: 2000 });
         console.log(error);
+        this.save(false);
       }
-      );
-      
-    // TODO: 
-    // this.save(true);
-
+    );
   }
 
   save(save: boolean) {
@@ -81,15 +78,12 @@ export class EditComponent implements OnInit {
   }
 
   removeLang(element) {
-    const index = this.languages.indexOf(element);
-    if (index !== -1) {
-      this.languages.splice(index, 1);
-    }
+    this.languages.delete(element);
     this.langChange = !this.equalsIgnoreOrder(this.languages, this.languages_);
   }
 
   addLang(lang: string) {
-    this.languages.push(lang);
+    this.languages.add(lang);
     this.langChange = !this.equalsIgnoreOrder(this.languages, this.languages_);
   }
 

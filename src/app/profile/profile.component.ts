@@ -60,14 +60,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   saveChanges(save: boolean) {
-    if (save) {
-      // TODO:
-      //  valami popup ha sikeres a mentés
-      this.ngOnInit();
-      this.edit = false;
-    } else {
-      this.edit = false;
-    }
+    this.ngOnInit();
+    this.edit = false;
   }
 
 }
