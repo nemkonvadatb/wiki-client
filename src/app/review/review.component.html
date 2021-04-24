@@ -1,0 +1,22 @@
+<mat-card class="article" *ngIf="(articleToReview$ | async) as article">
+    <mat-card-header>
+        <mat-card-title>{{article.title}}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        {{article.context}}
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-stroked-button (click)="router.navigate(['/review'])">
+            <mat-icon>keyboard_backspace</mat-icon>
+        </button>
+        <div class="button-float">
+            <button class="success-button" mat-raised-button (click)="submitReview('accepted')">
+                <mat-icon>check_circle</mat-icon>
+            </button>
+            <button class="danger-button" mat-raised-button (click)="submitReview('rejected')">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    </mat-card-actions>
+</mat-card>

@@ -1,0 +1,9 @@
+    <mat-card class="article-in-list" *ngFor="let article of articles$ | async" [routerLink]="['/review', article._id]">
+        <mat-card-header>
+            <mat-card-title>{{article.title}}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            {{article.context.substr(0,150) + '...'}}
+        </mat-card-content>
+    </mat-card>
