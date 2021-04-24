@@ -1,0 +1,23 @@
+<mat-card>
+    <form *ngIf="articleForm" [formGroup]="articleForm">
+        <mat-form-field class="full-width">
+            <input matInput placeholder="Title" formControlName="title">
+            <mat-error *ngIf="articleForm.controls.title.hasError('required')">
+                Required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+            <textarea matInput placeholder="Context" formControlName="context"></textarea>
+            <mat-error *ngIf="articleForm.controls.context.hasError('required')">
+                Required!
+            </mat-error>
+        </mat-form-field>
+        <mat-card-actions>
+            <button mat-stroked-button (click)="resetArticleForm()">Cancel</button>
+            <button mat-raised-button color="primary" [disabled]="articleForm.invalid"
+                (click)="submit()">Submit</button>
+        </mat-card-actions>
+    </form>
+
+</mat-card>
