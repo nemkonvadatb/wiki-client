@@ -16,7 +16,7 @@ export class EditComponent implements OnInit {
   userDataLabels = USER_DATA;
   userForm: FormGroup;
   languages: Set<string>;
-  languages_: string[];
+  languages_: Set<string>;
   langChange: boolean = false;
   langList = LANG_LIST;
   roleList = ROLES;
@@ -28,7 +28,7 @@ export class EditComponent implements OnInit {
   ngOnInit(): void {
     this.initUserForm();
     this.languages = new Set(this.user.lang);
-    this.languages_ = [...this.user.lang] || [];
+    this.languages_ = new Set(this.user.lang);
   }
 
   initUserForm(): void {
@@ -79,23 +79,16 @@ export class EditComponent implements OnInit {
 
   removeLang(element) {
     this.languages.delete(element);
-    this.langChange = !this.equalsIgnoreOrder(this.languages, this.languages_);
+    this.langChange = !this.isSetsEqual(this.languages, this.languages_);
   }
 
   addLang(lang: string) {
     this.languages.add(lang);
-    this.langChange = !this.equalsIgnoreOrder(this.languages, this.languages_);
+    this.langChange = !this.isSetsEqual(this.languages, this.languages_);
   }
 
-  equalsIgnoreOrder(a, b) {
-    if (a.length !== b.length) return false;
-    const uniqueValues = new Set([...a, ...b]);
-    for (const v of uniqueValues) {
-      const aCount = a.filter(e => e === v).length;
-      const bCount = b.filter(e => e === v).length;
-      if (aCount !== bCount) return false;
-    }
-    return true;
+  isSetsEqual(a, b): boolean {
+    return a.size === b.size && [...a].every(value => b.has(value));
   }
 
 }
