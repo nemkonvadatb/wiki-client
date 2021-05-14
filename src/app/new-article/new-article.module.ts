@@ -1,24 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditArticleComponent } from './edit-article.component';
-import { RouterModule, Routes } from '@angular/router';
+import { NewArticleComponent } from './new-article.component';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterModule, Routes } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 
 const routes: Routes = [
   {
     path: '',
-    component: EditArticleComponent,
+    component: NewArticleComponent,
   },
 ];
 
 @NgModule({
-  declarations: [EditArticleComponent],
+  declarations: [NewArticleComponent],
   imports: [
     CommonModule,
     MatCardModule,
@@ -30,6 +30,6 @@ const routes: Routes = [
     MatSnackBarModule,
     MatSelectModule,
     RouterModule.forChild(routes),
-  ],
+  ]
 })
-export class EditArticleModule { }
+export class NewArticleModule { }

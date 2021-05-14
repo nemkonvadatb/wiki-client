@@ -1,6 +1,16 @@
 export const LANG_LIST: string[] = [
-    "HU",
-    "RS",
+    "HUN",
     "ENG",
-    "GER"
+    "GER",
+    "FRE",
+    "FIN",
+    "RUS",
+    "DAN",
+    "BUL",
+    "BEL",
+    "BOS",
+    "SRB",
+    "CHI",
+    "HRV",
+    "CZE"
 ]

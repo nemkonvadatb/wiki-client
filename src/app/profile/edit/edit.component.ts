@@ -20,15 +20,20 @@ export class EditComponent implements OnInit {
   langChange: boolean = false;
   langList = LANG_LIST;
   roleList = ROLES;
-  isAdmin: boolean = false; // TODO: check if user can edit the role of a user
+  isAdmin: boolean = false; 
 
 
   constructor(private userService: UserService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.checkAdmin();
     this.initUserForm();
     this.languages = new Set(this.user.lang);
     this.languages_ = new Set(this.user.lang);
+  }
+
+  checkAdmin(): void {
+    this.isAdmin = this.user.role == "admin" || this.user.role == "lector"    
   }
 
   initUserForm(): void {
@@ -55,7 +60,7 @@ export class EditComponent implements OnInit {
       this.user.role = this.userForm.get('role').value;
     }
     this.user.lang = Array.from(this.languages);
-    console.log(this.user);
+    // console.log(this.user);
 
     this.userService.edit(this.user).subscribe(
       (res: any) => {
@@ -63,11 +68,11 @@ export class EditComponent implements OnInit {
           duration: 2000,
         });
         this.save(true);
-        console.log(res);
+        // console.log(res);
       },
       (error) => {
         this.snackBar.open(error.message, null, { duration: 2000 });
-        console.log(error);
+        console.error(error);
         this.save(false);
       }
     );

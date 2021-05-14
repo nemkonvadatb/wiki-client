@@ -44,10 +44,18 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'new-article',
+    loadChildren: () =>
+      import('./new-article/new-article.module').then(
+        (m) => m.NewArticleModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
-  /* { path: '**', redirectTo: 'articles', pathMatch: 'full' }, */
+  { path: '**', redirectTo: 'articles', pathMatch: 'full' },
 ];
 
 @NgModule({

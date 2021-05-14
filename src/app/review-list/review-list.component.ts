@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ArticleService } from '../services/article.service';
+import { UserService } from '../services/user.service';
 import { ArticleDetailsHistory } from '../shared/article.model';
 
 @Component({
@@ -8,15 +9,43 @@ import { ArticleDetailsHistory } from '../shared/article.model';
   templateUrl: './review-list.component.html',
   styleUrls: ['./review-list.component.scss']
 })
-export class ReviewListComponent implements OnInit {
-  articles$: Observable<ArticleDetailsHistory> 
-  constructor(private articleService: ArticleService) { }
+export class ReviewListComponent implements OnInit, OnDestroy {
+  articles$: Observable<ArticleDetailsHistory>
+  userSubs: Subscription;
+  isLector: boolean = true;
+
+  constructor(
+    private articleService: ArticleService,
+    private userService: UserService,
+  ) { }
 
   ngOnInit(): void {
-    this.observeUnderConsiderationArticles();
+    this.getUserInfo();
+    if (this.isLector) {
+      this.observeUnderConsiderationArticles();
+    }
+  }
+
+  getUserInfo() {
+    const userId = '' + localStorage.getItem('user-id');
+    this.userSubs = this.userService.get(userId).subscribe(
+      (result) => {
+        const userInfo = result as any;
+        this.isLector = userInfo.role == "lector"
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
   observeUnderConsiderationArticles() {
     this.articles$ = this.articleService.getUnderConsiderationArticles();
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubs) {
+      this.userSubs.unsubscribe();
+    }
   }
 }

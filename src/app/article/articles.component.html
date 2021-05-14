@@ -1,16 +1,13 @@
 <ng-container *ngIf="isListActive; else articleActive">
     <form [formGroup]="keywordForm">
         <mat-form-field class="full-width">
-            <input matInput placeholder="Enter keywords" formControlName="keywords">
-            <button mat-button matSuffix mat-icon-button aria-label="Send Message"
-                (click)="observeArticleDetailsByTags()">
+            <input matInput placeholder="Enter keywords" formControlName="keywords" (keyup)="observeArticleDetailsByTags()">
+            <button mat-button matSuffix mat-icon-button aria-label="Send Message" (click)="observeArticleDetailsByTags()">
                 <mat-icon>send</mat-icon>
             </button>
         </mat-form-field>
     </form>
-
-    <mat-card class="article-in-list" *ngFor="let article of articleDetailsList$ | async"
-        (click)="navigateToArticle(article)">
+    <mat-card class="article-in-list" *ngFor="let article of articleDetailsList$ | async" (click)="navigateToArticle(article)">
         <mat-card-header>
             <mat-card-title>{{article.title}}
             </mat-card-title>
@@ -23,34 +20,46 @@
 
 
 <ng-template #articleActive>
-    <mat-card class="article" *ngIf="(article$ | async) as article; else noArticle">
-        <mat-card-header>
-            <mat-card-title>{{article.title}}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            {{article.context}}
-        </mat-card-content>
-        <mat-card-footer>
-            <mat-card-subtitle>
-                Más nyelvek:
-            </mat-card-subtitle>
-            <a class="links" *ngFor="let lang of article.lang" (click)="navigateToArticle(article, lang)">
-                <p>{{lang}}</p>
-            </a>
-        </mat-card-footer>
-    </mat-card>
+    <ng-container *ngIf="(article$ | async); else noArticle">
+        <mat-card class="article" *ngIf="(article$ | async) as article; else noArticle">
+            <mat-card-header>
+                <mat-card-title>{{article.title}}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                {{article.context}}
+            </mat-card-content>
+            <mat-card-footer>
+                <mat-card-subtitle>
+                    Más nyelvek:
+                </mat-card-subtitle>
+                <a class="links" *ngFor="let lang of article.lang" (click)="navigateToArticle(article, lang)">
+                    <p>{{lang}}</p>
+                </a>
+            </mat-card-footer>
+        </mat-card>
+        <div class="navigation-holder">
+            <button mat-stroked-button aria-label="Send Message" (click)="router.navigate(['/articles'])">
+                <mat-icon>keyboard_backspace</mat-icon>
+            </button>
+            <button class="edit-button" mat-stroked-button aria-label="Send Message" (click)="router.navigate(['/edit-article', articleIdentifier.id, articleIdentifier.lang])">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </div>
+    </ng-container>
+
     <ng-template #noArticle>
-        Theres no article to be showed.
+        <mat-card class="article">
+            <mat-card-header>
+                <mat-card-title>Theres no article to be shown.
+                </mat-card-title>
+            </mat-card-header>
+        </mat-card>
+        <div class="navigation-holder">
+            <button mat-stroked-button aria-label="Send Message" (click)="router.navigate(['/articles'])">
+                <mat-icon>keyboard_backspace</mat-icon>
+            </button>
+        </div>
     </ng-template>
 
-    <div class="navigation-holder">
-        <button mat-stroked-button aria-label="Send Message" (click)="router.navigate(['/articles'])">
-            <mat-icon>keyboard_backspace</mat-icon>
-        </button>
-        <button class="edit-button" mat-stroked-button aria-label="Send Message"
-            (click)="router.navigate(['/edit-article', articleIdentifier.id, articleIdentifier.lang])">
-            <mat-icon>edit</mat-icon>
-        </button>
-    </div>
 </ng-template>

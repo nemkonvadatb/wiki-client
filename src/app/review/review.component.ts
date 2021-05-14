@@ -14,12 +14,13 @@ import { ArticleDetailsHistory } from '../shared/article.model';
 export class ReviewComponent implements OnInit {
   articleToReview$: Observable<ArticleDetailsHistory>;
   id: string;
+  article: ArticleDetailsHistory;
   constructor(
     public router: Router,
     private articleService: ArticleService,
     private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((res) => {
@@ -30,15 +31,21 @@ export class ReviewComponent implements OnInit {
 
   observeArticleToReview() {
     this.articleToReview$ = this.articleService.getHistoryById(this.id);
+    this.articleToReview$.subscribe((res) => {
+      this.article = res;
+    })
   }
 
   submitReview(state: string) {
     this.articleService
-      .reviewArticle(this.id, state)
+      .reviewArticle(state, this.article)
       .pipe(first())
-      .subscribe(() => {
+      .subscribe((res) => {
+        //console.log(res);
         this.snackBar.open('Successful operation', null, { duration: 2000 });
         this.router.navigate(['review']);
+      }, err => {
+        console.error(err);
       });
   }
 }

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { ArticleService } from '../services/article.service';
 import { ArticleDetails } from '../shared/article.model';
+import { LANG_LIST } from '../shared/language.list';
 
 @Component({
   selector: 'app-edit-article',
@@ -16,12 +17,13 @@ export class EditArticleComponent implements OnInit {
   articleId: string;
   articleLang: string;
   article: ArticleDetails;
+  langList = LANG_LIST;
   constructor(
     private articleService: ArticleService,
     private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getRouterParams();
@@ -76,5 +78,9 @@ export class EditArticleComponent implements OnInit {
           console.error(err.message);
         }
       );
+  }
+
+  back() {
+    this.router.navigate(['/articles', this.articleId, this.articleLang]);
   }
 }

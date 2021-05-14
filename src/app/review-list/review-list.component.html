@@ -1,3 +1,4 @@
+<ng-container *ngIf="isLector; else user">
     <mat-card class="article-in-list" *ngFor="let article of articles$ | async" [routerLink]="['/review', article._id]">
         <mat-card-header>
             <mat-card-title>{{article.title}}
@@ -7,3 +8,13 @@
             {{article.context.substr(0,150) + '...'}}
         </mat-card-content>
     </mat-card>
+</ng-container>
+<ng-template #user>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                You don't have permission to review articles
+            </mat-card-title>
+        </mat-card-header>
+    </mat-card>
+</ng-template>

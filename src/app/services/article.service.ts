@@ -1,64 +1,84 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import {
   Article,
   ArticleDetails,
   ArticleDetailsHistory,
-  MOCK_ARTICLES,
-  MOCK_ARTICLE_DETAILS,
-  MOCK_ARTICLE_DETAILS_HISTORY,
 } from '../shared/article.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArticleService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getById(id: string): Observable<Article[]> {
-    const params = new HttpParams().append('article_id', id);
-    return this.http
-      .get('articles/find_by_id', { params })
-      .pipe(map((res) => res as Article[]));
-  }
-
-  getByIdAndLang(id: string, lang: string): Observable<ArticleDetails> {
-    const params = new HttpParams()
-      .append('article_id', id)
-      .append('lang', lang);
-    return this.http
-      .get('articles/find_by_id_lang', { params })
-      .pipe(map((res) => res as ArticleDetails));
-  }
-
-  getByKeywords(tag: string): Observable<ArticleDetails[]> {
-    const params = new HttpParams().append('tags', tag);
-    return this.http.get('articles/find_tag', { params }).pipe(
-      tap((res) => console.log(res)),
+  /** @returns article_details[] */
+  getAll(): Observable<ArticleDetails[]> {
+    return this.http.get('articles/getAllArticleDetails').pipe(
       map((res) => res as ArticleDetails[])
     );
   }
 
-  getFullArticle(id: string, lang: string): Observable<ArticleDetails> {
+  /** @returns article */
+  getById(id: string): Observable<Article> {
+    return this.http
+      .get('articles/getArticleById/' + id)
+      .pipe(map((res) => res as Article));
+  }
+
+  /** @returns article_details */
+  getByIdAndLang(id: string, lang: string): Observable<ArticleDetails> {
+    /* const params = new HttpParams()
+      .append('article_id', id)
+      .append('lang', lang); */
+    return this.http
+      .get('articles/getArticleByIdLang/' + id + "/" + lang)
+      .pipe(map((res) => res as ArticleDetails));
+  }
+
+  /** @returns article_details */
+  getDetById(id: string): Observable<ArticleDetails> {
+    return this.http
+      .get('articles/getArticleDetailsById/' + id)
+      .pipe(map((res) => res as ArticleDetails));
+  }
+
+  /** @returns article_details[] */
+  getByText(str: string): Observable<ArticleDetails[]> {
+    return this.http.get('articles/getArticleDetailsByText/' + str).pipe(
+      // tap((res) => console.log(res)),
+      map((res) => res as ArticleDetails[])
+    );
+  }
+
+  getFullArticle(id: string, lang: string): Observable<unknown> {
     return combineLatest([
-      of(MOCK_ARTICLE_DETAILS[0]) /* this.getByIdAndLang(id, lang) */,
-      of(MOCK_ARTICLES) /* this.getById(id) */,
+      this.getByIdAndLang(id, lang),
+      this.getById(id)
     ]).pipe(
       first(),
-      map(([articleDetails, article]) => {
-        return { ...articleDetails, lang: article[0].lang };
+      map((res) => {
+        // console.log(res)
+        return { ...res[0], lang: res[1].lang_id };
       })
     );
   }
 
+  /** @returns article_details_history */
   getHistoryById(id: string): Observable<ArticleDetailsHistory> {
-    return of(MOCK_ARTICLE_DETAILS_HISTORY); //this.http.get('articles/article_history' + id);
+    return this.http.get('articles/getArticleDetailsHistoryById/' + id).pipe(
+      map((res) => res as ArticleDetailsHistory)
+    );
   }
 
-  reviewArticle(id: string, state: string): Observable<unknown> {
-    return this.http.put('articles/stateChange', { id, state });
+  reviewArticle(state: string, article: ArticleDetailsHistory): Observable<unknown> {
+    let { _id, article_id, author_id, context, lang_id, reviewer_id, title } = article;
+    return this.http.put(
+      'articles/stateChange',
+      { state, _id, article_id, author_id, context, lang_id, reviewer_id, title }
+    );
   }
 
   getUnderConsiderationArticles(): Observable<ArticleDetailsHistory> {

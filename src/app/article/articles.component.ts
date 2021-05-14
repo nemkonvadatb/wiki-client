@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { ArticleService } from '../services/article.service';
-import { ArticleDetails, MOCK_ARTICLE_DETAILS } from '../shared/article.model';
+import { ArticleDetails } from '../shared/article.model';
 
 @Component({
   selector: 'app-articles',
@@ -21,7 +21,7 @@ export class ArticlesComponent implements OnInit {
     private articleService: ArticleService,
     public router: Router,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.keywordForm = new FormGroup({ keywords: new FormControl('') });
@@ -49,10 +49,14 @@ export class ArticlesComponent implements OnInit {
   }
 
   observeArticleDetailsByTags() {
-    this.articleDetailsList$ =
-      /* this.articleService
-      .getByKeywords(this.keywordForm.value.keywords) */
-      of(MOCK_ARTICLE_DETAILS).pipe(first());
+    if (this.keywordForm.value.keywords) {
+      this.articleDetailsList$ = this.articleService.getByText(this.keywordForm.value.keywords);
+    } else {
+      this.articleDetailsList$ = this.articleService.getAll();
+    }
+    /* this.articleDetailsList$.subscribe((res) => {
+      console.log(res);
+    }) */
   }
 
   navigateToArticle(article: ArticleDetails, lang?: string) {

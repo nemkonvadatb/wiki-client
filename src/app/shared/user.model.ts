@@ -13,8 +13,8 @@ export interface User {
     institution?: string;
     academic_degree?: any;
     lang?: string[];
-    articleParticipant?: string[];
-    numberOfArticles?: number;
+    article_participant?: string[];
+    number_of_articles?: number;
     registeredAt?: any;
 } 
 
@@ -43,17 +43,17 @@ export const USER_DATA: UserData[] = [
       label: "Role",
       dbId: "role"
     },
-    {
+    /* {
       label: "Registered at",
       dbId: ""
-    },
+    }, */
     {
       label: "Languages",
       dbId: "lang"
     },
     {
       label: "Number of articles",
-      dbId: ""
+      dbId: "number_of_articles"
     },
   ];
 

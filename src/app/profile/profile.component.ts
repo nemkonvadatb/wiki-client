@@ -23,8 +23,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const userId = '' + localStorage.getItem('user-id'); // vagy majd az urlből:  profile/:id
     this.userSubs = this.userService.get(userId).subscribe(
       (result) => {
-        console.log(result);
-        const userInfo = result[0];
+        // console.log(result);
+        const userInfo = result as any;
         this.username = userInfo.name;
 
         this.user = {
@@ -37,11 +37,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
           institution: userInfo.institution,
           academic_degree: userInfo.academic_degree,
           lang: userInfo.lang,
-          articleParticipant: userInfo.articleParticipant,
-          numberOfArticles: userInfo.articleParticipant?.length(),
+          article_participant: userInfo.article_participant,
+          number_of_articles: userInfo.article_participant?.length,
           registeredAt: null //TODO:
         }
-        console.log(this.user);
+        // console.log(this.user);
       },
       (error) => {
         console.error(error);
